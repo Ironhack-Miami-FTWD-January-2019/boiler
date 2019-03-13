@@ -8,15 +8,29 @@ import api from '../api';
 import logo from '../logo.svg';
 
 export default class App extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      countries: []
+  state = {
+    countries: [],
+    user: {},
+  }
+
+  componentDidMount() {
+    this.setUser()
+  }
+
+  setUser = () => {
+    if (api.isLoggedIn()) {
+      this.setState({ user: api.getLocalStorageUser() })
+    } else {
+      this.setState({ user: {} })
+
     }
   }
 
   handleLogoutClick(e) {
     api.logout()
+    //this.setState({user:null})
+    this.setUser()
+
   }
 
   render() {
@@ -25,6 +39,7 @@ export default class App extends Component {
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">MERN Boilerplate</h1>
+          user: {this.state.user.username}
           <NavLink to="/" exact>Home</NavLink>
           {!api.isLoggedIn() && <NavLink to="/signup">Signup</NavLink>}
           {!api.isLoggedIn() && <NavLink to="/login">Login</NavLink>}
@@ -32,14 +47,41 @@ export default class App extends Component {
           <NavLink to="/secret">Secret</NavLink>
         </header>
         <Switch>
-          <Route path="/" exact component={Home} />
 
-          <Route path="/signup" component={Signup} />
-          <Route path="/login" component={Login} />
 
+        <Route
+            exact
+            path='/'
+            render={(props) => <Home {...props}  setUser={this.setUser} />}
+          />
+          <Route
+            path='/signup'
+            render={(props) => <Signup {...props} setUser={this.setUser} />}
+          />
+          <Route
+            path='/login'
+            render={(props) => <Login {...props} setUser={this.setUser}/>}
+          />
+          
+          
           <Route render={() => <h2>404</h2>} />
+
+
         </Switch>
       </div>
     );
   }
 }
+
+/*          <Route
+            path='/'
+            render={(props) => <Home {...props} setUser={this.setUser} />}
+          />
+          <Route
+            path='/signup'
+            render={(props) => <Signup {...props} setUser={this.setUser} />}
+          />
+          <Route
+            path='/login'
+            render={(props) => <Login {...props} setUser={this.setUser}/>}
+          />*/

@@ -7,10 +7,10 @@ export default class Home extends Component {
   
   componentDidMount(){
 
-    // console.log(api.isLoggedIn())
-    // console.log(api.getLocalStorageUser())
+    console.log(api.isLoggedIn())
+    console.log(api.getLocalStorageUser())
 
-    Axios.get('http://localhost:5000/api/whatever').then(res=>{
+    Axios.get('http://localhost:5000/api/whatever',).then(res=>{
       // console.log(res)
     })
 
